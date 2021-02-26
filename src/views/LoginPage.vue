@@ -3,9 +3,10 @@
     form(@submit.prevent id="loginForm")
       input(
           type="text"
-          v-model.trim="form.login"
-          id="loginForm__login"
-          name="loginForm__login"
+          v-model.trim="form.email"
+          id="loginForm__email"
+          name="loginForm__email"
+          :class="{ error: hasError('email') }"
         ).input
       input(
           type="password"
@@ -19,15 +20,14 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-// test@zonesmart.ru
-// 4815162342test
+
 export default {
     name: 'LoginPage',
 
     data() {
         return {
             form: {
-                login: null,
+                email: null,
                 password: null,
             },
         }
@@ -40,8 +40,26 @@ export default {
         }),
 
         authError() {
-            console.log(this.loginErrors)
-            return this.loginErrors
+            if (this.loginErrors) {
+                const e = this.loginErrors
+
+                if (typeof e === 'string') {
+                    return e
+                } else if (Array.isArray(e)) {
+                    return e.join('\n')
+                } else if (typeof e === 'object') {
+                    return Object.keys(e)
+                        .map(k => {
+                            if (Array.isArray(e[k])) {
+                                return `${k}: ${e[k].join('\n')}`
+                            }
+                        })
+                        .join('\n')
+                }
+                return e
+            }
+
+            return null
         },
     },
 
@@ -50,9 +68,16 @@ export default {
             authLogin: 'auth/login',
         }),
 
+        hasError(field) {
+            if (this.loginErrors) {
+                return Object.keys(this.loginErrors).includes(field)
+            }
+            return false
+        },
+
         serializeForm() {
             return {
-                login: this.form.login,
+                email: this.form.email,
                 password: this.form.password,
             }
         },

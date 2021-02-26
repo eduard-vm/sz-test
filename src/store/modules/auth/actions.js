@@ -14,10 +14,17 @@ export default {
             const res = await auth.login(payload)
             console.log(res)
         } catch (exception) {
-            // console.error(exception)
-            commit(types.SET_ERROR, {
-                auth: exception,
-            })
+            if (exception.response) {
+                if (exception.response.status === 400) {
+                    commit(types.SET_ERROR, {
+                        auth: exception.response.data,
+                    })
+                } else {
+                    commit(types.SET_ERROR, {
+                        auth: 'Неизвестная ошибка',
+                    })
+                }
+            }
         } finally {
             commit(types.SET_LOADING, { auth: false })
         }
