@@ -1,4 +1,4 @@
-# sz-test
+# Тестовое задание ZoneSmart (Vue.js)
 
 ## Project setup
 ```
