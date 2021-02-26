@@ -53,6 +53,7 @@ export default {
                             if (Array.isArray(e[k])) {
                                 return `${k}: ${e[k].join('\n')}`
                             }
+                            return e[k]
                         })
                         .join('\n')
                 }
