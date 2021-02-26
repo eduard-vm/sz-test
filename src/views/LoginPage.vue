@@ -3,38 +3,54 @@
     form(@submit.prevent id="loginForm")
       input(
           type="text"
-          v-model.trim="login"
+          v-model.trim="form.login"
           id="loginForm__login"
           name="loginForm__login"
         ).input
       input(
           type="password"
-          v-model.trim="password"
+          v-model.trim="form.password"
           id="loginForm__password"
           name="passwordForm__login"
         ).input
       button(type="button" @click="loginHandler").btn Вход
 </template>
-
 <script>
+import { mapActions } from 'vuex'
+// test@zonesmart.ru
+// 4815162342test
 export default {
     name: 'LoginPage',
 
     data() {
         return {
-            login: null,
-            password: null,
+            form: {
+                login: null,
+                password: null,
+            },
         }
     },
 
+    computed: {
+        loginLoading: ({ auth }) => auth.loading.auth,
+    },
+
     methods: {
+        ...mapActions({
+            authLogin: 'auth/login',
+        }),
+
         serializeForm() {
             return {
-                login: this.login,
-                password: this.password,
+                login: this.form.login,
+                password: this.form.password,
             }
         },
-        loginHandler() {},
+
+        loginHandler() {
+            const reqBody = this.serializeForm()
+            this.authLogin(reqBody)
+        },
     },
 }
 </script>
