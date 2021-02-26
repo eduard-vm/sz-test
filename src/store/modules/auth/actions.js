@@ -4,7 +4,13 @@ import * as types from './mutation-types'
 export default {
     async login({ commit }, payload) {
         try {
+            /** Ресет ошибок */
+            commit(types.SET_ERROR, {
+                auth: null,
+            })
+            /** В положение ожидание */
             commit(types.SET_LOADING, { auth: true })
+
             const res = await auth.login(payload)
             console.log(res)
         } catch (exception) {

@@ -14,9 +14,11 @@
           name="passwordForm__login"
         ).input
       button(type="button" @click="loginHandler").btn Вход
+      .alert.alert--error
+        | {{ authError }}
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 // test@zonesmart.ru
 // 4815162342test
 export default {
@@ -32,7 +34,15 @@ export default {
     },
 
     computed: {
-        loginLoading: ({ auth }) => auth.loading.auth,
+        ...mapState({
+            loginLoading: ({ auth }) => auth.loading.auth,
+            loginErrors: ({ auth }) => auth.errors.auth,
+        }),
+
+        authError() {
+            console.log(this.loginErrors)
+            return this.loginErrors
+        },
     },
 
     methods: {
