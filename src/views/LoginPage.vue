@@ -1,22 +1,28 @@
 <template lang="pug">
-  .page
-    form(@submit.prevent id="loginForm")
-      input(
-          type="text"
-          v-model.trim="form.email"
-          id="loginForm__email"
-          name="loginForm__email"
-          :class="{ error: hasError('email') }"
-        ).input
-      input(
-          type="password"
-          v-model.trim="form.password"
-          id="loginForm__password"
-          name="passwordForm__login"
-        ).input
-      button(type="button" @click="loginHandler").btn Вход
-      .alert.alert--error
-        | {{ authError }}
+  .page.page-login
+    img(src="../assets/svg/logo-light-bg.svg").page-login__logo
+    sz-card(title="Вход").login-card
+        form(@submit.prevent id="loginForm")
+            sz-input(
+                type="text"
+                v-model.trim="form.email"
+                id="loginForm__email"
+                name="loginForm__email"
+                autocomplete="off"
+                placeholder="E-mail или телефон"
+                :class="{ error: hasError('email') }"
+                )
+            sz-input(
+                type="password"
+                autocomplete="off"
+                v-model.trim="form.password"
+                id="loginForm__password"
+                name="passwordForm__login"
+                placeholder="Пароль"
+                ).m-y3
+            sz-button(@click="loginHandler").m-y3 Вход
+            sz-alert(type="error").m-y1
+                | {{ authError }}
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
@@ -90,3 +96,12 @@ export default {
     },
 }
 </script>
+
+<style lang="sass">
+.page-login
+    &__logo
+        margin: 60px auto 105px
+.login-card
+    width: 407px
+    margin: 0 auto
+</style>

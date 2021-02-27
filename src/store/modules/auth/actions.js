@@ -15,7 +15,6 @@ export default {
             console.log(res)
         } catch (exception) {
             if (exception.response) {
-                console.log(exception.response)
                 const { status, data } = exception.response
                 if (status === 400 || status === 401) {
                     commit(types.SET_ERROR, {
