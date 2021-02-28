@@ -10,4 +10,8 @@ export default {
     [types.SET_ERROR](state, errors = {}) {
         setStateFromValueMap(state.errors, errors)
     },
+
+    [types.SET_CREDENTIALS](state, credentials) {
+        state.credentials = credentials
+    },
 }

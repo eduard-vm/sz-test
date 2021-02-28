@@ -1,17 +1,23 @@
 
 .sz-input
-    // width: 307px
     position: relative
     &__password-show-icon
         position: absolute
         right: $input-px
         top: calc(#{$input-py} + 2px)
         cursor: pointer
+
     input
         padding: calc(#{$input-py} - 1px) $input-px
         border-radius: $input-border-radius
         border: 1px solid $gray1
         width: 100%
+
+        &:focus
+            border-color: $accent-green
+
+        &:disabled
+            cursor: not-allowed
 
         &[type=password]
             padding-right: calc(#{$input-px} + 2rem)

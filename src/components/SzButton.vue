@@ -1,5 +1,5 @@
 <template lang="pug">
-    button(type="button" @click="$emit('click')" :class="buttonClass" :style="buttonStyle").sz-button
+    button(type="button" @click="$emit('click')" :disabled="$attrs.disabled || loading" :class="buttonClass" :style="buttonStyle").sz-button
         template(v-if="$slots.default")
             slot
         template(v-else)
@@ -11,6 +11,10 @@ export default {
     name: 'SzButton',
 
     inheritAttrs: false,
+
+    props: {
+        loading: Boolean,
+    },
 
     data() {
         return {

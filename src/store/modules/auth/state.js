@@ -6,4 +6,6 @@ export default {
     errors: {
         auth: null,
     },
+
+    credentials: null,
 }

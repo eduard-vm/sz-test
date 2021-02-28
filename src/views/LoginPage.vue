@@ -8,19 +8,19 @@
                 v-model.trim="form.email"
                 id="loginForm__email"
                 name="loginForm__email"
-                autocomplete="off"
+                :disabled="loginLoading"
                 placeholder="E-mail или телефон"
                 :class="{ error: hasError('email') }"
                 )
             sz-input(
                 type="password"
-                autocomplete="off"
+                :disabled="loginLoading"
                 v-model.trim="form.password"
                 id="loginForm__password"
                 name="passwordForm__login"
                 placeholder="Пароль"
                 ).m-y3
-            sz-button(@click="loginHandler").m-y3 Вход
+            sz-button(@click="loginHandler" :loading="loginLoading").m-y3 Вход
             sz-alert(type="error").m-y1
                 | {{ authError }}
 </template>
@@ -44,6 +44,10 @@ export default {
             loginLoading: ({ auth }) => auth.loading.auth,
             loginErrors: ({ auth }) => auth.errors.auth,
         }),
+
+        disabled() {
+            return this.loginLoading
+        },
 
         authError() {
             if (this.loginErrors) {
@@ -89,9 +93,9 @@ export default {
             }
         },
 
-        loginHandler() {
-            const reqBody = this.serializeForm()
-            this.authLogin(reqBody)
+        async loginHandler() {
+            await this.authLogin(this.serializeForm())
+            this.$router.push({ name: 'Home' })
         },
     },
 }

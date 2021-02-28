@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import { AUTH_TOKEN_KEY } from '@/config'
 
 Vue.use(VueRouter)
 
@@ -27,7 +28,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.meta && to.meta.isProtected) {
+    const isAuth = localStorage.getItem(AUTH_TOKEN_KEY)
+
+    if (to.name === 'Login' && isAuth) {
+        return next('/')
+    }
+
+    if (to.meta && to.meta.isProtected && !isAuth) {
         return next('/login')
     }
 
