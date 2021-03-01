@@ -36,7 +36,11 @@
                             :rowIndex="rowIndex"
                             :colIndex="cellIndex"
                             :data="row"
+                            :toggleNested="toggleNested(rowIndex, propKey)"
                         )
+                tr(v-if="showNestedFor && $scopedSlots[`nested-for-${showNestedFor.field}`] && showNestedFor.rowIndex === rowIndex" :key="`nested_${rowIndex}`")
+                    td(:colspan="colsTotal")
+                        slot(:name="`nested-for-${showNestedFor.field}`" :row="{data: row}")
 </template>
 
 <script>
@@ -68,6 +72,7 @@ export default {
 
     data() {
         return {
+            showNestedFor: null,
             selected: [],
         }
     },
@@ -117,6 +122,29 @@ export default {
 
         resetTable() {
             this.selected = []
+        },
+
+        toggleNested(rowIndex, field) {
+            /**
+             * NOTE: каррировал, чтобы вернуть уже
+             * заряженую аргументами функцию, готовую
+             * к вызовы
+             *  */
+            return () => {
+                if (this.showNestedFor) {
+                    if (
+                        this.showNestedFor.field === field &&
+                        this.showNestedFor.rowIndex === rowIndex
+                    ) {
+                        this.showNestedFor = null
+                        return
+                    }
+                }
+                this.showNestedFor = {
+                    field,
+                    rowIndex,
+                }
+            }
         },
     },
 }

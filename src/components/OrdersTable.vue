@@ -8,6 +8,19 @@
         )
             template(#cell-order_id="{ data }")
                 router-link(:to="`#orders/${data.order_id}`" class="decoration-none") {{ data.order_id }}
+            template(#cell-items="{ data, toggleNested }")
+                a(
+                    class="decoration-none"
+                    href="javascript: void 0"
+                    @click="toggleNested"
+                )
+                    | + {{ formatDeclOfProductsCount(data.items.length) }}
+
+            template(#nested-for-items="{row}")
+                table.sz-table--nested
+                    thead
+                        tr
+                            th(v-for="field of productFields" :key="field.key") {{ field.label }}
         .orders-table__pagination
             sz-table-pagination(
                 :count="pagination.count"
@@ -20,6 +33,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { formatDeclOfProductsCount } from '@/helpers/format'
 
 import SzTable from './SzTable/SzTable.vue'
 import SzTablePagination from './SzTable/SzTablePagination.vue'
@@ -74,11 +88,11 @@ function boolCellRenderer({ value }) {
 /**
  * Рендер шаблона для булевых
  */
-function itemsCellRenderer({ value }) {
-    return `
-    <a href="javascript:void 0" class="decoration-none">+ ${value.length} товара</a>
-`
-}
+// function itemsCellRenderer({ value }) {
+//     return `
+//     <a href="javascript:void 0" class="decoration-none">+ ${value.length} товара</a>
+// `
+// }
 
 export default {
     name: 'OrdersTable',
@@ -93,10 +107,18 @@ export default {
                 page: 0,
                 totalPages: 0,
             },
+
+            productFields: [
+                { key: 'name', label: 'Название/SKU' },
+                { key: 'ordered_quantity', label: 'Заказанное количество' },
+                { key: 'quantity_sent', label: 'Отправленное количество' },
+                { key: 'price', label: 'Цена' },
+                { key: 'total', label: 'Стоимость' },
+            ],
+
             fields: [
                 { key: 'order_id', label: 'id', width: '140' },
                 {
-                    cellTemplateRenderer: itemsCellRenderer,
                     key: 'items',
                     label: 'Товары',
                 },
@@ -158,6 +180,8 @@ export default {
     },
 
     methods: {
+        formatDeclOfProductsCount,
+
         ...mapActions({
             ordersGetAll: 'orders/getAll',
         }),
