@@ -13,7 +13,14 @@ export default {
         setStateFromValueMap(state.errors, errors)
     },
 
-    [types.SET_CREDENTIALS](state, credentials) {
-        state.credentials = credentials
+    [types.SET_PAGINATION](state, pagination) {
+        state.pagination = {
+            ...state.pagination,
+            ...pagination,
+        }
+    },
+
+    [types.SET_ORDERS](state, orders) {
+        state.orders = Object.freeze(orders)
     },
 }

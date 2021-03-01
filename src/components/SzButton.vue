@@ -14,6 +14,10 @@ export default {
 
     props: {
         loading: Boolean,
+        width: {
+            type: String,
+            default: '100%',
+        },
     },
 
     data() {
@@ -24,7 +28,9 @@ export default {
 
     computed: {
         buttonStyle() {
-            return {}
+            return {
+                width: this.width,
+            }
         },
         buttonClass() {
             return {}

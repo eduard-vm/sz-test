@@ -22,7 +22,9 @@ request.interceptors.request.use(
     config => {
         const token = localStorage.getItem(AUTH_TOKEN_KEY)
         if (token) {
-            config.defaults.headers.common['Authorization'] = `Bearer ${token}`
+            config.headers = {
+                Authorization: `JWT ${token}`,
+            }
         }
         return config
     },
@@ -33,6 +35,7 @@ function createResponseInterceptor() {
     const responseInterceptor = request.interceptors.response.use(
         response => response,
         error => {
+            console.log(error)
             if (error.response.status !== 401) {
                 return Promise.reject(error)
             }
@@ -54,7 +57,7 @@ function createResponseInterceptor() {
                     )
                     error.response.config.headers[
                         'Authorization'
-                    ] = `Bearer ${response.data.access}`
+                    ] = `JWT ${response.data.access}`
                     return axios(error.response.config)
                 })
                 .catch(error => {
