@@ -1,6 +1,7 @@
 export default {
     loading: {
         all: false,
+        search: false,
     },
 
     errors: {

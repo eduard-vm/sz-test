@@ -2,8 +2,6 @@
     #orders.page
         .page__body
             orders-table
-   
-
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template lang="pug">
-    .sz-input
+    .sz-input(:style="inputStyle")
         input(v-bind="$attrs" v-model="model" ref="input")
         .sz-input__password-show-icon(v-if="isPasswordInput")
             .icon.icon--ey(@mousedown="showPass = true" @mouseup="showPass = false")
@@ -13,6 +13,10 @@ export default {
 
     props: {
         value: String,
+        width: {
+            type: String,
+            default: 'auto',
+        },
     },
 
     data() {
@@ -39,6 +43,12 @@ export default {
 
         isPasswordInput() {
             return this.$attrs.type === 'password'
+        },
+
+        inputStyle() {
+            return {
+                width: this.width,
+            }
         },
     },
 }

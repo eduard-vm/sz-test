@@ -5,16 +5,29 @@
     padding: calc(#{$input-py} - 1px) $input-px
     border-radius: $button-border-radius
     width: 100%
-    background-color: $accent-green
-    border-color: $accent-green
+
     text-transform: uppercase
+
     &:hover
         cursor: pointer
-        background-color: $hover-green
-        border-color: $hover-green
-
 
     &:disabled
         background-color: $gray1
         border-color: $gray1
         cursor: not-allowed
+
+    &--color-default
+        background-color: $accent-green
+        border-color: $accent-green
+        &:hover
+            background-color: $hover-green
+            border-color: $hover-green
+    &--color-dark
+        background-color: $primary-dark-blue
+        border-color: $primary-dark-blue
+        &:hover
+            background-color: $hover-primary-dark-blue
+            border-color: $hover-primary-dark-blue
+
+    &--size-md
+        padding: calc(#{$input-py / 3}) $input-px

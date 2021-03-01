@@ -14,6 +14,14 @@ export default {
 
     props: {
         loading: Boolean,
+        color: {
+            type: String,
+            default: 'green',
+        },
+        size: {
+            type: String,
+            default: 'default',
+        },
         width: {
             type: String,
             default: '100%',
@@ -33,7 +41,10 @@ export default {
             }
         },
         buttonClass() {
-            return {}
+            return {
+                [`sz-button--size-${this.size}`]: true,
+                [`sz-button--color-${this.color}`]: true,
+            }
         },
     },
 

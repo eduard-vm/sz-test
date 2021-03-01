@@ -1,5 +1,14 @@
 <template lang="pug">
   .orders-table
+        .orders-table__header.m-y-3
+            .flex.space-between
+                h1 Таблица заказов
+                .flex
+                    sz-button(disabled="true" color="black" size="md").m-x-1 Отправления
+                    sz-button(disabled="true" size="md") Экспортировать
+        .orders-table__control.flex.m-y-2
+            sz-button(color="dark" size="xl" width="95px") фильтр
+            sz-input(v-model="search" placeholder="поиск" :disabled="ordersLoading" width="100%").m-x3
         sz-table(
             :fields="fields"
             :rows="ordersData"
@@ -29,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { formatDeclOfProductsCount } from '@/helpers/format'
 
 import SzTable from './SzTable/SzTable.vue'
@@ -64,6 +73,7 @@ export default {
 
     data() {
         return {
+            search: null,
             pagination: {
                 limit: 10,
                 offset: 0,
@@ -119,7 +129,9 @@ export default {
         ...mapState({
             ordersPagination: ({ orders }) => orders.pagination,
             ordersData: ({ orders }) => orders.orders,
-            ordersLoading: ({ orders }) => orders.loading.all,
+        }),
+        ...mapGetters({
+            ordersLoading: 'orders/loading',
         }),
     },
 
