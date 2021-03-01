@@ -24,6 +24,7 @@ export default {
                 limit: params.limit,
                 offset: params.offset,
                 search: params.search,
+                count: data.count,
                 page: params.page,
                 totalPages,
             })

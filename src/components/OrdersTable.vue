@@ -3,9 +3,16 @@
         sz-table(
             :fields="fields"
             :rows="ordersData"
+            :loading="ordersLoading"
         )
         .orders-table__pagination
-            SzTablePagination
+            sz-table-pagination(
+                :count="pagination.count"
+                :totalPages="pagination.totalPages"
+                :page="pagination.page"
+                :limit="pagination.limit"
+                @change="changePage"
+            )
 </template>
 
 <script>
@@ -132,15 +139,8 @@ export default {
         ...mapState({
             ordersPagination: ({ orders }) => orders.pagination,
             ordersData: ({ orders }) => orders.orders,
+            ordersLoading: ({ orders }) => orders.loading.all,
         }),
-
-        canPrevPage() {
-            return this.pagination.page > 0
-        },
-
-        canNextPage() {
-            return this.pagination.page <= this.pagination.totalPages
-        },
     },
 
     watch: {
@@ -163,19 +163,17 @@ export default {
             this.ordersGetAll(this.pagination)
         },
 
-        prevPage() {
-            if (this.canPrevPage) {
-                this.pagination.page -= 1
-                this.getOrders()
-            }
-        },
-
-        nextPage() {
-            if (this.canNextPage) {
-                this.pagination.page += 1
-                this.getOrders()
-            }
+        changePage(page) {
+            this.pagination.page = page
+            this.getOrders()
         },
     },
 }
 </script>
+
+<style lang="sass">
+.orders-table
+    &__pagination
+        float: right
+        margin-top: 20px
+</style>
