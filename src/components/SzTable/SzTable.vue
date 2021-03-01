@@ -38,9 +38,12 @@
                             :data="row"
                             :toggleNested="toggleNested(rowIndex, propKey)"
                         )
-                tr(v-if="showNestedFor && $scopedSlots[`nested-for-${showNestedFor.field}`] && showNestedFor.rowIndex === rowIndex" :key="`nested_${rowIndex}`")
+                tr(
+                    v-if="showNestedFor && $scopedSlots[`nested-for-${showNestedFor.field}`] && showNestedFor.rowIndex === rowIndex"
+                    :key="`nested_${rowIndex}`"
+                ).sz-table__nested-row
                     td(:colspan="colsTotal")
-                        slot(:name="`nested-for-${showNestedFor.field}`" :row="{data: row}")
+                        slot(:name="`nested-for-${showNestedFor.field}`" :row="row")
 </template>
 
 <script>
@@ -79,7 +82,7 @@ export default {
 
     computed: {
         colsTotal() {
-            return this.fields.length
+            return this.fields.length + (this.checkbox ? 1 : 0)
         },
 
         tableClass() {
@@ -122,6 +125,7 @@ export default {
 
         resetTable() {
             this.selected = []
+            this.showNestedFor = null
         },
 
         toggleNested(rowIndex, field) {

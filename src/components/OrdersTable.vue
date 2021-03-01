@@ -17,10 +17,7 @@
                     | + {{ formatDeclOfProductsCount(data.items.length) }}
 
             template(#nested-for-items="{row}")
-                table.sz-table--nested
-                    thead
-                        tr
-                            th(v-for="field of productFields" :key="field.key") {{ field.label }}
+                order-products-table(:data="row.items")
         .orders-table__pagination
             sz-table-pagination(
                 :count="pagination.count"
@@ -37,33 +34,7 @@ import { formatDeclOfProductsCount } from '@/helpers/format'
 
 import SzTable from './SzTable/SzTable.vue'
 import SzTablePagination from './SzTable/SzTablePagination.vue'
-
-/** TODO: в утилиты */
-const normalizeDateFragment = value => (value <= 9 ? `0${value}` : value)
-
-/** TODO: в шаблоны форматирования в качестве стандартных */
-/**
- * Форматирования даты
- */
-function dateCellFormatter({ value }) {
-    if (typeof value === 'string') {
-        const date = new Date(value)
-        return [
-            normalizeDateFragment(date.getDate()),
-            normalizeDateFragment(date.getMonth()),
-            date.getFullYear(),
-        ].join('.')
-    }
-    return value
-}
-
-/** TODO: в шаблоны форматирования в качестве стандартных */
-/**
- * Форматирование денег
- */
-function moneyCellFormatter({ value }) {
-    return `$${value}`
-}
+import OrderProductsTable from './OrderProductsTable.vue'
 
 /**
  * Форматирование статуса
@@ -85,19 +56,11 @@ function boolCellRenderer({ value }) {
     }"></div>
 `
 }
-/**
- * Рендер шаблона для булевых
- */
-// function itemsCellRenderer({ value }) {
-//     return `
-//     <a href="javascript:void 0" class="decoration-none">+ ${value.length} товара</a>
-// `
-// }
 
 export default {
     name: 'OrdersTable',
 
-    components: { SzTable, SzTablePagination },
+    components: { SzTable, SzTablePagination, OrderProductsTable },
 
     data() {
         return {
@@ -108,14 +71,6 @@ export default {
                 totalPages: 0,
             },
 
-            productFields: [
-                { key: 'name', label: 'Название/SKU' },
-                { key: 'ordered_quantity', label: 'Заказанное количество' },
-                { key: 'quantity_sent', label: 'Отправленное количество' },
-                { key: 'price', label: 'Цена' },
-                { key: 'total', label: 'Стоимость' },
-            ],
-
             fields: [
                 { key: 'order_id', label: 'id', width: '140' },
                 {
@@ -123,7 +78,7 @@ export default {
                     label: 'Товары',
                 },
                 {
-                    cellFormatter: dateCellFormatter,
+                    cellFormatter: 'dateCellFormatter',
                     align: 'center',
                     key: 'create_date',
                     label: 'Дата заказа',
@@ -151,7 +106,7 @@ export default {
                     label: 'Покупатель',
                 },
                 {
-                    cellFormatter: moneyCellFormatter,
+                    cellFormatter: 'moneyCellFormatter',
                     key: 'total_price',
                     align: 'right',
                     label: 'Стоимость',

@@ -23,6 +23,7 @@
 <script>
 import SzTableMixin from './SzTableMixin'
 import SzTableCheckboxCell from './SzTableCheckboxCell.vue'
+import * as formatters from './formatters'
 
 export default {
     name: 'SzTableRow',
@@ -74,7 +75,16 @@ export default {
             const value = row[field.key]
 
             if (field.cellFormatter) {
-                return field.cellFormatter.call(this, { value, row })
+                let fn =
+                    typeof field.cellFormatter === 'string' &&
+                    formatters[field.cellFormatter]
+                        ? formatters[field.cellFormatter]
+                        : field.cellFormatter
+
+                return fn.call(this, {
+                    value,
+                    row,
+                })
             }
             return value
         },
