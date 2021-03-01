@@ -1,5 +1,5 @@
 <template lang="pug">
-    table(border="0" rules="none" cellspacing="0" cellpadding="0").sz-table
+    table(border="0" :class="tableClass" rules="none" cellspacing="0" cellpadding="0").sz-table
         thead
             tr
                 th(v-for="(field, key) of fields"
@@ -9,8 +9,11 @@
                         .label {{ field.label }}
             tr
                 th(:colspan="colsTotal")
-        tbody
-            tr(v-for="(row, rowIndex) of rows" :key="rowIndex").sz-table__row
+        transition-group(tag="tbody" appear name="list")
+            tr(
+                v-for="(row, rowIndex) of rows"
+                :key="row.id" :style="{'transition-delay': `${rowIndex * 30}ms`}"
+            ).sz-table__row
                 td(v-for="(field, colIndex) of fields" :key="colIndex" :align="getAlign(field)")
                     .sz-table__cell(
                         :class="field.cellClass || {}"
@@ -28,11 +31,18 @@ export default {
     props: {
         fields: Array,
         rows: Array,
+        loading: Boolean,
     },
 
     computed: {
         colsTotal() {
             return this.fields.length
+        },
+
+        tableClass() {
+            return {
+                'sz-table--loading': this.loading,
+            }
         },
     },
 
