@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import { AUTH_TOKEN_KEY } from '@/config'
 
 Vue.use(VueRouter)
@@ -13,11 +12,17 @@ const routes = [
     },
     {
         path: '/',
-        name: 'Home',
+        component: () => import('../layouts/Default.vue'),
         meta: {
             isProtected: true,
         },
-        component: Home,
+        children: [
+            {
+                path: '/',
+                name: 'Home',
+                component: () => import('../views/Orders.vue'),
+            },
+        ],
     },
 ]
 

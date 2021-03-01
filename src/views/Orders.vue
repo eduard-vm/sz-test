@@ -1,6 +1,5 @@
 <template lang="pug">
     #home
-        sz-button(@click="logout" width="100px") Выход
         div {{ pagination }}
         div
             a(href="javascript: void 0" @click="prevPage" v-if="canPrevPage") Назад
@@ -53,7 +52,6 @@ export default {
 
     methods: {
         ...mapActions({
-            logout: 'auth/logout',
             ordersGetAll: 'orders/getAll',
         }),
 

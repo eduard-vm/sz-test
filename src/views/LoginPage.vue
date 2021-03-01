@@ -103,8 +103,10 @@ export default {
 
 <style lang="sass">
 .page-login
+    padding-top: 60px
     &__logo
-        margin: 60px auto 105px
+        display: block
+        margin: 0 auto 105px auto
 .login-card
     width: 407px
     margin: 0 auto
