@@ -8,7 +8,7 @@
                     sz-button(disabled="true" size="md") Экспортировать
         .orders-table__control.flex.m-y-2
             sz-button(color="dark" size="xl" width="95px") фильтр
-            sz-input(v-model="search" placeholder="поиск" :disabled="ordersLoading" width="100%").m-x3
+            sz-input(@input="searchInputHandler" :value="pagination.search" placeholder="поиск" width="100%").m-x3
         sz-table(
             :fields="fields"
             :rows="ordersData"
@@ -40,7 +40,8 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { formatDeclOfProductsCount } from '@/helpers/format'
-
+import debounce from '@/helpers/debounce'
+import { SEARCH_DELAY } from '@/config'
 import SzTable from './SzTable/SzTable.vue'
 import SzTablePagination from './SzTable/SzTablePagination.vue'
 import OrderProductsTable from './OrderProductsTable.vue'
@@ -66,6 +67,13 @@ function boolCellRenderer({ value }) {
 `
 }
 
+const resetPagination = () => ({
+    limit: 10,
+    offset: 0,
+    page: 0,
+    totalPages: 0,
+})
+
 export default {
     name: 'OrdersTable',
 
@@ -74,12 +82,8 @@ export default {
     data() {
         return {
             search: null,
-            pagination: {
-                limit: 10,
-                offset: 0,
-                page: 0,
-                totalPages: 0,
-            },
+            savedPagination: null,
+            pagination: resetPagination(),
 
             fields: [
                 { key: 'order_id', label: 'id', width: '140' },
@@ -148,6 +152,22 @@ export default {
 
     methods: {
         formatDeclOfProductsCount,
+
+        searchInputHandler: debounce(function search(query) {
+            if (!this.savedPagination) {
+                this.savedPagination = { ...this.pagination }
+            }
+
+            if (query) {
+                const pagination = resetPagination()
+                pagination.search = query
+                this.pagination = pagination
+                this.getOrders()
+            } else {
+                this.pagination = { ...this.savedPagination }
+                this.savedPagination = null
+            }
+        }, SEARCH_DELAY),
 
         ...mapActions({
             ordersGetAll: 'orders/getAll',
