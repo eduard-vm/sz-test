@@ -1,5 +1,10 @@
 <template lang="pug">
     tr(:style="rowStyle").sz-table__row
+        sz-table-checkbox-cell(
+            v-if="checkbox"
+            @change="$emit('select')"
+            :selected="selected"
+        )
         td(v-for="(field, colIndex) of fields" :key="colIndex" :align="getCellAlign(field)")
             .sz-table__cell(
                 :class="field.cellClass || {}"
@@ -11,13 +16,18 @@
 </template>
 <script>
 import SzTableMixin from './SzTableMixin'
+import SzTableCheckboxCell from './SzTableCheckboxCell.vue'
 
 export default {
     name: 'SzTableRow',
 
+    components: { SzTableCheckboxCell },
+
     mixins: [SzTableMixin],
 
     props: {
+        selected: Boolean,
+        checkbox: Boolean,
         disabled: {
             type: Boolean,
             default: true,

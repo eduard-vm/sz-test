@@ -2,6 +2,12 @@
     table(border="0" :class="tableClass" rules="none" cellspacing="0" cellpadding="0").sz-table
         thead
             tr
+                sz-table-checkbox-cell(
+                    v-if="checkbox"
+                    tag="th"
+                    @change="selectAll"
+                    :selected="hasSelected"
+                )
                 th(v-for="(field, key) of fields"
                     :width="field.width"
                     :key="key" :align="getCellAlign(field)")
@@ -12,15 +18,20 @@
         transition-group(tag="tbody" appear name="list")
             template(v-for="(row, rowIndex) of rows")
                 sz-table-row(
+                    :selected="isSelected(rowIndex)"
+                    :checkbox="checkbox"
                     :rowIndex="rowIndex"
                     :fields="fields"
                     :data="row"
                     :key="row.id"
+                    @select="selectRow(rowIndex)"
                 )
 </template>
 
 <script>
 import SzTableRow from './SzTableRow.vue'
+import SzTableCheckboxCell from './SzTableCheckboxCell.vue'
+
 import SzTableMixin from './SzTableMixin'
 
 export default {
@@ -30,12 +41,24 @@ export default {
 
     components: {
         SzTableRow,
+        SzTableCheckboxCell,
     },
 
     props: {
+        checkbox: Boolean,
         fields: Array,
         rows: Array,
         loading: Boolean,
+    },
+
+    watch: {
+        rows: 'resetTable',
+    },
+
+    data() {
+        return {
+            selected: [],
+        }
     },
 
     computed: {
@@ -47,6 +70,34 @@ export default {
             return {
                 'sz-table--loading': this.loading,
             }
+        },
+
+        hasSelected() {
+            return Boolean(this.selected.length)
+        },
+    },
+
+    methods: {
+        selectAll() {
+            this.selected = this.hasSelected
+                ? []
+                : Array.from(Array(this.rows.length)).map((_, i) => i)
+        },
+
+        isSelected(index) {
+            return this.selected.includes(index)
+        },
+
+        selectRow(index) {
+            if (this.isSelected(index)) {
+                this.selected = this.selected.filter(i => i !== index)
+            } else {
+                this.selected.push(index)
+            }
+        },
+
+        resetTable() {
+            this.selected = []
         },
     },
 }

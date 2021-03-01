@@ -2,3 +2,38 @@ input
     appearance: none
     font-size: 1.4rem
     line-height: 2.4rem
+
+input[type=checkbox]
+    appearance: none
+    position: relative
+
+
+    &:after,
+    &:before
+        content: ''
+        height: 24px
+        width: 24px
+        display: block
+        cursor: pointer
+
+    &:before
+        box-sizing: border-box
+        border: 1px solid #C5C7CD
+        border-radius: 3px
+
+    &:after
+        opacity: 0
+        position: absolute
+        top: 0
+        left: 0
+        background-repeat: no-repeat
+        background-position: center
+        background-image: url('../svg/checked.svg')
+        transition: opacity 60ms ease-in
+
+    &:checked
+        &::after
+            opacity: 1
+
+    &:focus
+        outline: none

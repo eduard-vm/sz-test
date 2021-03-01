@@ -4,6 +4,7 @@
             :fields="fields"
             :rows="ordersData"
             :loading="ordersLoading"
+            checkbox
         )
         .orders-table__pagination
             sz-table-pagination(
