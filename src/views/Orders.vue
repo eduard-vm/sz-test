@@ -1,6 +1,6 @@
 <template lang="pug">
     #home
-        div {{ pagination }}
+        OrdersTable
         div
             a(href="javascript: void 0" @click="prevPage" v-if="canPrevPage") Назад
             br
@@ -10,9 +10,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import OrdersTable from '@/components/OrdersTable'
 
 export default {
     name: 'Home',
+
+    components: {
+        OrdersTable,
+    },
 
     data() {
         return {
