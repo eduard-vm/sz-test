@@ -26,6 +26,17 @@
                     :key="row.id"
                     @select="selectRow(rowIndex)"
                 )
+                    template(
+                        v-if="hasCellSlotKeys"
+                        v-for="slotKey of cellSlotKeys"
+                        v-slot:[slotKey]="{propKey, cellIndex}"
+                    )
+                        slot(
+                            :name="slotKey"
+                            :rowIndex="rowIndex"
+                            :colIndex="cellIndex"
+                            :data="row"
+                        )
 </template>
 
 <script>
@@ -74,6 +85,14 @@ export default {
 
         hasSelected() {
             return Boolean(this.selected.length)
+        },
+
+        cellSlotKeys() {
+            return Object.keys(this.$scopedSlots).filter(k => /cell-.*/.test(k))
+        },
+
+        hasCellSlotKeys() {
+            return Boolean(this.cellSlotKeys.length)
         },
     },
 

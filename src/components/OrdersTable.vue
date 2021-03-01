@@ -6,6 +6,8 @@
             :loading="ordersLoading"
             checkbox
         )
+            template(#cell-order_id="{ data }")
+                router-link(:to="`#orders/${data.order_id}`" class="decoration-none") {{ data.order_id }}
         .orders-table__pagination
             sz-table-pagination(
                 :count="pagination.count"

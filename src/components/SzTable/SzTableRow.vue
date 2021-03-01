@@ -1,5 +1,5 @@
 <template lang="pug">
-    tr(:style="rowStyle").sz-table__row
+    tr(:style="rowStyle" :class="rowClass").sz-table__row
         sz-table-checkbox-cell(
             v-if="checkbox"
             @change="$emit('select')"
@@ -12,7 +12,13 @@
                 v-if="field.cellTemplateRenderer"
             )
             .sz-table__cell(v-else :class="field.cellClass || {}")
-                | {{ getValue(data, field) }}
+                slot(
+                    v-if="$scopedSlots[`cell-${field.key}`]"
+                    :name="`cell-${field.key}`"
+                    :propKey="field.key"
+                    :cellIndex="colIndex"
+                )
+                template(v-else) {{ getValue(data, field) }}
 </template>
 <script>
 import SzTableMixin from './SzTableMixin'
@@ -28,10 +34,7 @@ export default {
     props: {
         selected: Boolean,
         checkbox: Boolean,
-        disabled: {
-            type: Boolean,
-            default: true,
-        },
+        disabled: Boolean,
         fields: {
             type: Array,
             default() {
@@ -48,6 +51,13 @@ export default {
     },
 
     computed: {
+        rowClass() {
+            return {
+                'sz-table__row--selected': this.selected,
+                'sz-table__row--disabled': this.disabled,
+            }
+        },
+
         rowStyle() {
             return {
                 'transition-delay': `${this.rowIndex * 30}ms`,
