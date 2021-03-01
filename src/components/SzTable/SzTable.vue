@@ -10,23 +10,24 @@
             tr
                 th(:colspan="colsTotal")
         transition-group(tag="tbody" appear name="list")
-            tr(
-                v-for="(row, rowIndex) of rows"
-                :key="row.id" :style="{'transition-delay': `${rowIndex * 30}ms`}"
-            ).sz-table__row
-                td(v-for="(field, colIndex) of fields" :key="colIndex" :align="getAlign(field)")
-                    .sz-table__cell(
-                        :class="field.cellClass || {}"
-                        v-html="renderTemplate(field.cellTemplateRenderer, { value: row[field.key] })"
-                        v-if="field.cellTemplateRenderer"
-                    )
-                    .sz-table__cell(v-else :class="field.cellClass || {}")
-                        | {{ getValue(row, field) }}
+            template(v-for="(row, rowIndex) of rows")
+                sz-table-row(
+                    :rowIndex="rowIndex"
+                    :fields="fields"
+                    :data="row"
+                    :key="row.id"
+                )
 </template>
 
 <script>
+import SzTableRow from './SzTableRow.vue'
+
 export default {
     name: 'SzTable',
+
+    components: {
+        SzTableRow,
+    },
 
     props: {
         fields: Array,
@@ -47,19 +48,6 @@ export default {
     },
 
     methods: {
-        renderTemplate(renderFn, renderData) {
-            return renderFn.call(this, renderData)
-        },
-
-        getValue(row, field) {
-            const value = row[field.key]
-
-            if (field.cellFormatter) {
-                return field.cellFormatter.call(this, { value, row })
-            }
-            return value
-        },
-
         getAlign(field) {
             return field.align || 'left'
         },
