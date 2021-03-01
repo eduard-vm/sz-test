@@ -1,6 +1,6 @@
 <template lang="pug">
     .sz-card(:class="cardClass")
-        .sz-card__title
+        .sz-card__title.text-center
             template(v-if="$slots.title")
                 slot(name="title")
             template(v-else)

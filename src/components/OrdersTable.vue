@@ -2,83 +2,180 @@
   .orders-table
         sz-table(
             :fields="fields"
-            :rows="orders"
+            :rows="ordersData"
         )
         .orders-table__pagination
-            | pagination
+            SzTablePagination
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 import SzTable from './SzTable/SzTable.vue'
+import SzTablePagination from './SzTable/SzTablePagination.vue'
+
+/** TODO: в утилиты */
+const normalizeDateFragment = value => (value <= 9 ? `0${value}` : value)
+
+/** TODO: в шаблоны форматирования в качестве стандартных */
+/**
+ * Форматирования даты
+ */
+function dateCellFormatter({ value }) {
+    if (typeof value === 'string') {
+        const date = new Date(value)
+        return [
+            normalizeDateFragment(date.getDate()),
+            normalizeDateFragment(date.getMonth()),
+            date.getFullYear(),
+        ].join('.')
+    }
+    return value
+}
+
+/** TODO: в шаблоны форматирования в качестве стандартных */
+/**
+ * Форматирование денег
+ */
+function moneyCellFormatter({ value }) {
+    return `$${value}`
+}
+
+/**
+ * Форматирование статуса
+ */
+function statusCellFormatter({ row }) {
+    if (row.is_refunded) return 'возврат'
+    if (row.is_completed) return 'завершен'
+    if (row.is_open) return 'открыт'
+    return 'не определен'
+}
+
+/**
+ * Рендер шаблона для булевых
+ */
+function boolCellRenderer({ value }) {
+    return `
+    <div class="icon icon--w20 icon--${
+        value ? 'checked-circle-green' : 'empty-circle'
+    }"></div>
+`
+}
+/**
+ * Рендер шаблона для булевых
+ */
+function itemsCellRenderer({ value }) {
+    return `
+    <a href="javascript:void 0" class="decoration-none">+ ${value.length} товара</a>
+`
+}
 
 export default {
     name: 'OrdersTable',
 
-    components: { SzTable },
+    components: { SzTable, SzTablePagination },
 
     data() {
         return {
+            pagination: {
+                limit: 10,
+                offset: 0,
+                page: 0,
+                totalPages: 0,
+            },
             fields: [
-                { key: 'order_id', label: 'id' },
-                { key: 'items', label: 'Товары' },
-                { key: 'create_date', label: 'Дата заказа' },
-                { key: 'status', label: 'Статус' },
-                { key: 'is_paid', label: 'Оплачено' },
-                { key: 'is_shipped', label: 'Отправлено' },
-                { key: 'buyer', label: 'Покупатель' },
-                { key: 'total_price', label: 'Стоимость' },
-            ],
-
-            orders: [
+                { key: 'order_id', label: 'id', width: '140' },
                 {
-                    id: '7f6b9ac4-fd25-494b-a333-d8f029a112ad',
-                    created: '2021-02-11T13:16:27.900838+03:00',
-                    marketplace_user_account: {
-                        id: '62536ece-f491-423b-a9db-d9dc81c5ac33',
-                        user: 14,
-                        marketplace: 1,
-                        marketplace_name: 'eBay',
-                        username: 'jetsetter-su',
-                    },
-                    channel: {
-                        id: '281494ae-07f5-45be-8477-4a1ab586908a',
-                        name: 'Канал продаж "US site" аккаунта "jetsetter-su".',
-                        marketplace_user_account:
-                            '62536ece-f491-423b-a9db-d9dc81c5ac33',
-                        domain: 8,
-                    },
-                    order_id: '27-06529-36494',
-                    create_date: '2021-02-05T20:03:44+03:00',
-                    update_date: '2021-02-11T11:04:19+03:00',
-                    items: [
-                        {
-                            id: '8ab19a3c-eed8-45ec-b510-e3bfe2304cd8',
-                            sku: 'JC4039PP1ALF_0500_NOSIZE',
-                            title:
-                                "LOVE MOSCHINO women's BACKPACK JC4039PP1ALF",
-                            quantity: 1,
-                            price: 150.35,
-                            currency: 'USD',
-                            total_price: 150.35,
-                            main_image: null,
-                        },
-                    ],
-                    buyer: 'Krista Bruno',
-                    total_price: 150.35,
-                    currency_code: 'USD',
-                    is_open: false,
-                    is_paid: true,
-                    is_shipped: true,
-                    is_partially_shipped: false,
-                    is_completed: true,
-                    is_canceled: false,
-                    is_refunded: false,
-                    is_visible: true,
-                    is_viewed: false,
-                    is_disabled: true,
+                    cellTemplateRenderer: itemsCellRenderer,
+                    key: 'items',
+                    label: 'Товары',
+                },
+                {
+                    cellFormatter: dateCellFormatter,
+                    align: 'center',
+                    key: 'create_date',
+                    label: 'Дата заказа',
+                },
+                {
+                    cellFormatter: statusCellFormatter,
+                    align: 'center',
+                    key: 'status',
+                    label: 'Статус',
+                },
+                {
+                    cellTemplateRenderer: boolCellRenderer,
+                    align: 'center',
+                    key: 'is_paid',
+                    label: 'Оплачено',
+                },
+                {
+                    cellTemplateRenderer: boolCellRenderer,
+                    align: 'center',
+                    key: 'is_shipped',
+                    label: 'Отправлено',
+                },
+                {
+                    key: 'buyer',
+                    label: 'Покупатель',
+                },
+                {
+                    cellFormatter: moneyCellFormatter,
+                    key: 'total_price',
+                    align: 'right',
+                    label: 'Стоимость',
                 },
             ],
         }
+    },
+
+    computed: {
+        ...mapState({
+            ordersPagination: ({ orders }) => orders.pagination,
+            ordersData: ({ orders }) => orders.orders,
+        }),
+
+        canPrevPage() {
+            return this.pagination.page > 0
+        },
+
+        canNextPage() {
+            return this.pagination.page <= this.pagination.totalPages
+        },
+    },
+
+    watch: {
+        $route: {
+            immediate: true,
+            handler: 'getOrders',
+        },
+
+        ordersPagination(pagination) {
+            this.pagination = { ...pagination }
+        },
+    },
+
+    methods: {
+        ...mapActions({
+            ordersGetAll: 'orders/getAll',
+        }),
+
+        getOrders() {
+            this.ordersGetAll(this.pagination)
+        },
+
+        prevPage() {
+            if (this.canPrevPage) {
+                this.pagination.page -= 1
+                this.getOrders()
+            }
+        },
+
+        nextPage() {
+            if (this.canNextPage) {
+                this.pagination.page += 1
+                this.getOrders()
+            }
+        },
     },
 }
 </script>

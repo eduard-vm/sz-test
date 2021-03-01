@@ -22,6 +22,7 @@ export default {
     display: grid
     grid-template-areas: "sidebar topbar" "sidebar viewport"
     grid-template-columns: 220px 1fr
+    grid-template-rows: 60px 1fr
     min-height: 100vh
     background: #F6F9FC
 .sidebar
@@ -38,4 +39,5 @@ export default {
 
 .viewport
     grid-area: viewport
+    height: calc(100vh - 60px)
 </style>
