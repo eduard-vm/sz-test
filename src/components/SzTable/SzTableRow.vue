@@ -1,6 +1,6 @@
 <template lang="pug">
     tr(:style="rowStyle").sz-table__row
-        td(v-for="(field, colIndex) of fields" :key="colIndex" :align="field.align || 'left'")
+        td(v-for="(field, colIndex) of fields" :key="colIndex" :align="getCellAlign(field)")
             .sz-table__cell(
                 :class="field.cellClass || {}"
                 v-html="renderTemplate(field.cellTemplateRenderer, { value: data[field.key] })"
@@ -10,8 +10,12 @@
                 | {{ getValue(data, field) }}
 </template>
 <script>
+import SzTableMixin from './SzTableMixin'
+
 export default {
     name: 'SzTableRow',
+
+    mixins: [SzTableMixin],
 
     props: {
         disabled: {

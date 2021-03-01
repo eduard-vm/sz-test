@@ -4,7 +4,7 @@
             tr
                 th(v-for="(field, key) of fields"
                     :width="field.width"
-                    :key="key" :align="getAlign(field)")
+                    :key="key" :align="getCellAlign(field)")
                     .sz-table__cell.sz-table__cell--header
                         .label {{ field.label }}
             tr
@@ -21,9 +21,12 @@
 
 <script>
 import SzTableRow from './SzTableRow.vue'
+import SzTableMixin from './SzTableMixin'
 
 export default {
     name: 'SzTable',
+
+    mixins: [SzTableMixin],
 
     components: {
         SzTableRow,
@@ -44,12 +47,6 @@ export default {
             return {
                 'sz-table--loading': this.loading,
             }
-        },
-    },
-
-    methods: {
-        getAlign(field) {
-            return field.align || 'left'
         },
     },
 }
