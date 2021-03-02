@@ -8,7 +8,14 @@
                     @change="selectAll"
                     :selected="hasSelected"
                 )
-                th(v-for="(field, key) of fields"
+                th(
+                    align="right"
+                    :colspan="fields.length" v-if="hasSelected")
+                    a(href="javascript:void 0" @click="updateSelected").decoration-none.m-x-1 Обновить
+                    a(href="javascript:void 0" @click="deleteSelected").decoration-none Удалить
+                th(
+                    v-else
+                    v-for="(field, key) of fields"
                     :width="field.width"
                     :key="key" :align="getCellAlign(field)")
                     .sz-table__cell.sz-table__cell--header
@@ -105,6 +112,18 @@ export default {
     },
 
     methods: {
+        getSelectedForLogOutput() {
+            return this.selected.map(i => this.rows[i].order_id).join(', ')
+        },
+
+        deleteSelected() {
+            console.log(`Удаляю [${this.getSelectedForLogOutput()}]`)
+        },
+
+        updateSelected() {
+            console.log(`Обновляю [${this.getSelectedForLogOutput()}]`)
+        },
+
         selectAll() {
             this.selected = this.hasSelected
                 ? []

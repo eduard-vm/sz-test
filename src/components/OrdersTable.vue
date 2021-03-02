@@ -153,6 +153,10 @@ export default {
     methods: {
         formatDeclOfProductsCount,
 
+        ...mapActions({
+            ordersGetAll: 'orders/getAll',
+        }),
+
         searchInputHandler: debounce(function search(query) {
             if (!this.savedPagination) {
                 this.savedPagination = { ...this.pagination }
@@ -168,10 +172,6 @@ export default {
                 this.savedPagination = null
             }
         }, SEARCH_DELAY),
-
-        ...mapActions({
-            ordersGetAll: 'orders/getAll',
-        }),
 
         getOrders() {
             this.ordersGetAll(this.pagination)

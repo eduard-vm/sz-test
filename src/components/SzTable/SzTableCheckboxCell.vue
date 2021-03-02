@@ -1,5 +1,5 @@
 <template lang="pug">
-    component(:is="tag")
+    component(:is="tag" width="90")
         .sz-table__cell.sz-table__cell--checkbox
             input(
                 type="checkbox"
