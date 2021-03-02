@@ -1,5 +1,5 @@
 <template lang="pug">
-    .sz-card(:class="cardClass")
+    .sz-card(:class="card_class")
         .sz-card__title.text-center
             template(v-if="$slots.title")
                 slot(name="title")
@@ -18,7 +18,7 @@ export default {
     },
 
     computed: {
-        cardClass() {
+        card_class() {
             return {}
         },
     },

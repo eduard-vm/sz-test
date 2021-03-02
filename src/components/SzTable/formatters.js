@@ -2,7 +2,7 @@ const normalizeDateFragment = value => (value <= 9 ? `0${value}` : value)
 /**
  * Форматирования даты
  */
-export function dateCellFormatter({ value }) {
+export function datecell_formatter({ value }) {
     if (typeof value === 'string') {
         const date = new Date(value)
         return [
@@ -17,7 +17,7 @@ export function dateCellFormatter({ value }) {
 /**
  * Форматирование денег
  */
-export function moneyCellFormatter({ value }) {
+export function moneycell_formatter({ value }) {
     return new Intl.NumberFormat('us-US', {
         style: 'currency',
         currency: 'USD',

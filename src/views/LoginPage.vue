@@ -8,21 +8,21 @@
                 v-model.trim="form.email"
                 id="loginForm__email"
                 name="loginForm__email"
-                :disabled="loginLoading"
+                :disabled="login_loading"
                 placeholder="E-mail или телефон"
                 :class="{ error: hasError('email') }"
                 )
             sz-input(
                 type="password"
-                :disabled="loginLoading"
+                :disabled="login_loading"
                 v-model.trim="form.password"
                 id="loginForm__password"
                 name="passwordForm__login"
                 placeholder="Пароль"
                 ).m-y3
-            sz-button(@click="loginHandler" :loading="loginLoading").m-y3 Вход
+            sz-button(@click="loginHandler" :loading="login_loading").m-y3 Вход
             sz-alert(type="error").m-y1
-                | {{ authError }}
+                | {{ auth_error }}
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
@@ -41,17 +41,17 @@ export default {
 
     computed: {
         ...mapState({
-            loginLoading: ({ auth }) => auth.loading.auth,
-            loginErrors: ({ auth }) => auth.errors.auth,
+            login_loading: ({ auth }) => auth.loading.auth,
+            login_errors: ({ auth }) => auth.errors.auth,
         }),
 
         disabled() {
-            return this.loginLoading
+            return this.login_loading
         },
 
-        authError() {
-            if (this.loginErrors) {
-                const e = this.loginErrors
+        auth_error() {
+            if (this.login_errors) {
+                const e = this.login_errors
 
                 if (typeof e === 'string') {
                     return e
@@ -80,8 +80,8 @@ export default {
         }),
 
         hasError(field) {
-            if (this.loginErrors) {
-                return Object.keys(this.loginErrors).includes(field)
+            if (this.login_errors) {
+                return Object.keys(this.login_errors).includes(field)
             }
             return false
         },

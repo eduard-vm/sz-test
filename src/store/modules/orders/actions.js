@@ -17,7 +17,7 @@ export default {
                 search: params.search,
             })
 
-            const totalPages = Math.ceil(data.count / state.pagination.limit)
+            const total_pages = Math.ceil(data.count / state.pagination.limit)
 
             commit(types.SET_ORDERS, data.results)
             commit(types.SET_PAGINATION, {
@@ -26,7 +26,7 @@ export default {
                 search: params.search,
                 count: data.count,
                 page: params.page,
-                totalPages,
+                total_pages,
             })
 
             return data

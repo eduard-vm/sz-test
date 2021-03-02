@@ -1,5 +1,5 @@
 <template lang="pug">
-    button(type="button" @click="$emit('click')" :disabled="$attrs.disabled || loading" :class="buttonClass" :style="buttonStyle").sz-button
+    button(type="button" @click="$emit('click')" :disabled="$attrs.disabled || loading" :class="button_class" :style="button_style").sz-button
         template(v-if="$slots.default")
             slot
         template(v-else)
@@ -20,7 +20,7 @@ export default {
         },
         size: {
             type: String,
-            default: 'default',
+            default: 'green',
         },
         width: {
             type: String,
@@ -35,12 +35,12 @@ export default {
     },
 
     computed: {
-        buttonStyle() {
+        button_style() {
             return {
                 width: this.width,
             }
         },
-        buttonClass() {
+        button_class() {
             return {
                 [`sz-button--size-${this.size}`]: true,
                 [`sz-button--color-${this.color}`]: true,

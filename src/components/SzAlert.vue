@@ -1,5 +1,5 @@
 <template lang="pug">
-    .sz-alert(:class="alertClass")
+    .sz-alert(:class="alert_class")
         slot
 </template>
 
@@ -12,15 +12,15 @@ export default {
     },
 
     computed: {
-        alertClass() {
-            const alertType =
+        alert_class() {
+            const alert_type =
                 {
                     warning: 'warning',
                     success: 'success',
                     danger: 'danger',
                 }[this.type] || 'danger'
 
-            return `sz-alert--${alertType}`
+            return `sz-alert--${alert_type}`
         },
     },
 }

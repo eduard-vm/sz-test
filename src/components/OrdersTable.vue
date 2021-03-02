@@ -11,8 +11,8 @@
             sz-input(@input="searchInputHandler" :value="pagination.search" placeholder="поиск" width="100%").m-x3
         sz-table(
             :fields="fields"
-            :rows="ordersData"
-            :loading="ordersLoading"
+            :rows="orders_data"
+            :loading="orders_loading"
             checkbox
         )
             template(#cell-order_id="{ data }")
@@ -30,7 +30,7 @@
         .orders-table__pagination
             sz-table-pagination(
                 :count="pagination.count"
-                :totalPages="pagination.totalPages"
+                :total_pages="pagination.total_pages"
                 :page="pagination.page"
                 :limit="pagination.limit"
                 @change="changePage"
@@ -49,7 +49,7 @@ import OrderProductsTable from './OrderProductsTable.vue'
 /**
  * Форматирование статуса
  */
-function statusCellFormatter({ row }) {
+function statuscell_formatter({ row }) {
     if (row.is_refunded) return 'возврат'
     if (row.is_completed) return 'завершен'
     if (row.is_open) return 'открыт'
@@ -71,7 +71,7 @@ const resetPagination = () => ({
     limit: 10,
     offset: 0,
     page: 0,
-    totalPages: 0,
+    total_pages: 0,
 })
 
 export default {
@@ -82,7 +82,7 @@ export default {
     data() {
         return {
             search: null,
-            savedPagination: null,
+            saved_pagination: null,
             pagination: resetPagination(),
 
             fields: [
@@ -92,25 +92,25 @@ export default {
                     label: 'Товары',
                 },
                 {
-                    cellFormatter: 'dateCellFormatter',
+                    cell_formatter: 'datecell_formatter',
                     align: 'center',
                     key: 'create_date',
                     label: 'Дата заказа',
                 },
                 {
-                    cellFormatter: statusCellFormatter,
+                    cell_formatter: statuscell_formatter,
                     align: 'center',
                     key: 'status',
                     label: 'Статус',
                 },
                 {
-                    cellTemplateRenderer: boolCellRenderer,
+                    cell_template_renderer: boolCellRenderer,
                     align: 'center',
                     key: 'is_paid',
                     label: 'Оплачено',
                 },
                 {
-                    cellTemplateRenderer: boolCellRenderer,
+                    cell_template_renderer: boolCellRenderer,
                     align: 'center',
                     key: 'is_shipped',
                     label: 'Отправлено',
@@ -120,7 +120,7 @@ export default {
                     label: 'Покупатель',
                 },
                 {
-                    cellFormatter: 'moneyCellFormatter',
+                    cell_formatter: 'moneycell_formatter',
                     key: 'total_price',
                     align: 'right',
                     label: 'Стоимость',
@@ -131,11 +131,11 @@ export default {
 
     computed: {
         ...mapState({
-            ordersPagination: ({ orders }) => orders.pagination,
-            ordersData: ({ orders }) => orders.orders,
+            orders_pagination: ({ orders }) => orders.pagination,
+            orders_data: ({ orders }) => orders.orders,
         }),
         ...mapGetters({
-            ordersLoading: 'orders/loading',
+            orders_loading: 'orders/loading',
         }),
     },
 
@@ -145,7 +145,7 @@ export default {
             handler: 'getOrders',
         },
 
-        ordersPagination(pagination) {
+        orders_pagination(pagination) {
             this.pagination = { ...pagination }
         },
     },
@@ -158,8 +158,8 @@ export default {
         }),
 
         searchInputHandler: debounce(function search(query) {
-            if (!this.savedPagination) {
-                this.savedPagination = { ...this.pagination }
+            if (!this.saved_pagination) {
+                this.saved_pagination = { ...this.pagination }
             }
 
             if (query) {
@@ -168,8 +168,8 @@ export default {
                 this.pagination = pagination
                 this.getOrders()
             } else {
-                this.pagination = { ...this.savedPagination }
-                this.savedPagination = null
+                this.pagination = { ...this.saved_pagination }
+                this.saved_pagination = null
             }
         }, SEARCH_DELAY),
 

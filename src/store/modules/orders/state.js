@@ -15,7 +15,7 @@ export default {
         offset: 0,
         page: 0,
         count: 0,
-        totalPages: 0,
+        total_pages: 0,
         search: null,
     },
 }

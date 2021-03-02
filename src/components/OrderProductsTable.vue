@@ -38,7 +38,7 @@ export default {
                 {
                     key: 'sku',
                     label: 'Название/SKU',
-                    cellTemplateRenderer: titleSkuCellRenderer,
+                    cell_template_renderer: titleSkuCellRenderer,
                 },
                 // { key: 'title', label: '' },
                 {
@@ -51,24 +51,18 @@ export default {
                     key: 'price',
                     label: 'Цена',
                     align: 'right',
-                    cellFormatter: 'moneyCellFormatter',
+                    cell_formatter: 'moneycell_formatter',
                 },
                 // { key: 'currency', label: '' },
                 {
                     key: 'total_price',
                     label: 'Стоимость',
                     align: 'right',
-                    cellFormatter: 'moneyCellFormatter',
+                    cell_formatter: 'moneycell_formatter',
                 },
                 // { key: 'main_image', label: '' },
             ],
         }
-    },
-
-    watch: {
-        data(data) {
-            console.log(data)
-        },
     },
 }
 </script>

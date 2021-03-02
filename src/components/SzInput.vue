@@ -1,8 +1,8 @@
 <template lang="pug">
-    .sz-input(:style="inputStyle")
+    .sz-input(:style="input_style")
         input(v-bind="$attrs" v-model="model" ref="input")
-        .sz-input__password-show-icon(v-if="isPasswordInput")
-            .icon.icon--ey(@mousedown="showPass = true" @mouseup="showPass = false")
+        .sz-input__password-show-icon(v-if="is_password_input")
+            .icon.icon--ey(@mousedown="show_pass = true" @mouseup="show_pass = false")
 </template>
 
 <script>
@@ -21,12 +21,12 @@ export default {
 
     data() {
         return {
-            showPass: false,
+            show_pass: false,
         }
     },
 
     watch: {
-        showPass(show) {
+        show_pass(show) {
             this.$refs.input.type = show ? 'text' : 'password'
         },
     },
@@ -41,11 +41,11 @@ export default {
             },
         },
 
-        isPasswordInput() {
+        is_password_input() {
             return this.$attrs.type === 'password'
         },
 
-        inputStyle() {
+        input_style() {
             return {
                 width: this.width,
             }

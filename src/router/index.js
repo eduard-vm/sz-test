@@ -33,13 +33,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const isAuth = localStorage.getItem(AUTH_TOKEN_KEY)
+    const is_auth = localStorage.getItem(AUTH_TOKEN_KEY)
 
-    if (to.name === 'Login' && isAuth) {
+    if (to.name === 'Login' && is_auth) {
         return next('/')
     }
 
-    if (to.meta && to.meta.isProtected && !isAuth) {
+    if (to.meta && to.meta.isProtected && !is_auth) {
         return next('/login')
     }
 

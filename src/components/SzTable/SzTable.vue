@@ -1,16 +1,16 @@
 <template lang="pug">
-    table(border="0" :class="tableClass" rules="none" cellspacing="0" cellpadding="0").sz-table
+    table(border="0" :class="table_class" rules="none" cellspacing="0" cellpadding="0").sz-table
         thead
             tr
                 sz-table-checkbox-cell(
                     v-if="checkbox"
                     tag="th"
                     @change="selectAll"
-                    :selected="hasSelected"
+                    :selected="has_selected"
                 )
                 th(
                     align="right"
-                    :colspan="fields.length" v-if="hasSelected")
+                    :colspan="fields.length" v-if="has_selected")
                     a(href="javascript:void 0" @click="updateSelected").decoration-none.m-x-1 Обновить
                     a(href="javascript:void 0" @click="deleteSelected").decoration-none Удалить
                 th(
@@ -20,37 +20,37 @@
                     :key="key" :align="getCellAlign(field)")
                     .sz-table__cell.sz-table__cell--header
                         .label {{ field.label }}
-            tr(v-if="headerSpacer")
-                th(:colspan="colsTotal")
+            tr(v-if="header_spacer")
+                th(:colspan="cols_total")
         transition-group(tag="tbody" appear name="list")
-            template(v-for="(row, rowIndex) of rows")
+            template(v-for="(row, row_index) of rows")
                 sz-table-row(
-                    :selected="isSelected(rowIndex)"
+                    :selected="isSelected(row_index)"
                     :checkbox="checkbox"
-                    :rowIndex="rowIndex"
+                    :row_index="row_index"
                     :fields="fields"
                     :data="row"
                     :key="row.id"
-                    @select="selectRow(rowIndex)"
+                    @select="selectRow(row_index)"
                 )
                     template(
-                        v-if="hasCellSlotKeys"
-                        v-for="slotKey of cellSlotKeys"
+                        v-if="has_cell_slot_keys"
+                        v-for="slotKey of cell_slot_keys"
                         v-slot:[slotKey]="{propKey, cellIndex}"
                     )
                         slot(
                             :name="slotKey"
-                            :rowIndex="rowIndex"
+                            :row_index="row_index"
                             :colIndex="cellIndex"
                             :data="row"
-                            :toggleNested="toggleNested(rowIndex, propKey)"
+                            :toggleNested="toggleNested(row_index, propKey)"
                         )
                 tr(
-                    v-if="showNestedFor && $scopedSlots[`nested-for-${showNestedFor.field}`] && showNestedFor.rowIndex === rowIndex"
-                    :key="`nested_${rowIndex}`"
+                    v-if="show_nested_for && $scopedSlots[`nested-for-${show_nested_for.field}`] && show_nested_for.row_index === row_index"
+                    :key="`nested_${row_index}`"
                 ).sz-table__nested-row
-                    td(:colspan="colsTotal")
-                        slot(:name="`nested-for-${showNestedFor.field}`" :row="row")
+                    td(:colspan="cols_total")
+                        slot(:name="`nested-for-${show_nested_for.field}`" :row="row")
 </template>
 
 <script>
@@ -70,7 +70,10 @@ export default {
     },
 
     props: {
-        headerSpacer: Boolean, // Пусая строка для визуального разделения заголовка и тела таблицы
+        header_spacer: {
+            type: Boolean,
+            default: true,
+        }, // Пусая строка для визуального разделения заголовка и тела таблицы
         checkbox: Boolean,
         fields: Array,
         rows: Array,
@@ -83,32 +86,32 @@ export default {
 
     data() {
         return {
-            showNestedFor: null,
+            show_nested_for: null,
             selected: [],
         }
     },
 
     computed: {
-        colsTotal() {
+        cols_total() {
             return this.fields.length + (this.checkbox ? 1 : 0)
         },
 
-        tableClass() {
+        table_class() {
             return {
                 'sz-table--loading': this.loading,
             }
         },
 
-        hasSelected() {
+        has_selected() {
             return Boolean(this.selected.length)
         },
 
-        cellSlotKeys() {
+        cell_slot_keys() {
             return Object.keys(this.$scopedSlots).filter(k => /cell-.*/.test(k))
         },
 
-        hasCellSlotKeys() {
-            return Boolean(this.cellSlotKeys.length)
+        has_cell_slot_keys() {
+            return Boolean(this.cell_slot_keys.length)
         },
     },
 
@@ -126,7 +129,7 @@ export default {
         },
 
         selectAll() {
-            this.selected = this.hasSelected
+            this.selected = this.has_selected
                 ? []
                 : Array.from(Array(this.rows.length)).map((_, i) => i)
         },
@@ -145,28 +148,28 @@ export default {
 
         resetTable() {
             this.selected = []
-            this.showNestedFor = null
+            this.show_nested_for = null
         },
 
-        toggleNested(rowIndex, field) {
+        toggleNested(row_index, field) {
             /**
              * NOTE: каррировал, чтобы вернуть уже
              * заряженую аргументами функцию, готовую
              * к вызовы
              *  */
             return () => {
-                if (this.showNestedFor) {
+                if (this.show_nested_for) {
                     if (
-                        this.showNestedFor.field === field &&
-                        this.showNestedFor.rowIndex === rowIndex
+                        this.show_nested_for.field === field &&
+                        this.show_nested_for.row_index === row_index
                     ) {
-                        this.showNestedFor = null
+                        this.show_nested_for = null
                         return
                     }
                 }
-                this.showNestedFor = {
+                this.show_nested_for = {
                     field,
-                    rowIndex,
+                    row_index,
                 }
             }
         },

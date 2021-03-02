@@ -1,8 +1,8 @@
 <template lang="pug">
     .sz-table__pagination
-        span(v-if="canPrevPage" @click="prevPage").pagination__prev-button.icon.icon--arrow-left
+        span(v-if="can_prev_page" @click="prevPage").pagination__prev-button.icon.icon--arrow-left
         span.pagination__value {{ range }} из {{ count }}
-        span(v-if="canNextPage" @click="nextPage").pagination__next-button.icon.icon--arrow-right
+        span(v-if="can_next_page" @click="nextPage").pagination__next-button.icon.icon--arrow-right
 </template>
 
 <script>
@@ -11,7 +11,7 @@ export default {
 
     props: {
         count: Number,
-        totalPages: Number,
+        total_pages: Number,
         page: Number,
         limit: Number,
     },
@@ -24,12 +24,12 @@ export default {
             return `${from}-${total}`
         },
 
-        canPrevPage() {
+        can_prev_page() {
             return this.page > 0
         },
 
-        canNextPage() {
-            return this.page <= this.totalPages
+        can_next_page() {
+            return this.page <= this.total_pages
         },
     },
 
@@ -39,11 +39,11 @@ export default {
         },
 
         prevPage() {
-            if (this.canPrevPage) this.change(this.page - 1)
+            if (this.can_prev_page) this.change(this.page - 1)
         },
 
         nextPage() {
-            if (this.canNextPage) this.change(this.page + 1)
+            if (this.can_next_page) this.change(this.page + 1)
         },
     },
 }
