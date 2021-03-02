@@ -8,14 +8,20 @@
 <script>
 import SzTable from './SzTable/SzTable.vue'
 /**
- * Рендер шаблона для булевых
+ * Рендер шаблона для
  */
 function titleSkuCellRenderer({ row }) {
-    console.log(row)
     return `
-    hello
+        <div class="flex">
+            <img width="40" class="product__thumb" src="${row.main_image ||
+                '/images/placeholder.jpg'}" />
+            <div class="m-x1" style="padding: 6px 0">
+                <h5>${row.title}</h5>
+            </div>
+        </div>
 `
 }
+
 export default {
     name: 'OrderProductsTable',
 
@@ -44,12 +50,14 @@ export default {
                 {
                     key: 'price',
                     label: 'Цена',
+                    align: 'right',
                     cellFormatter: 'moneyCellFormatter',
                 },
                 // { key: 'currency', label: '' },
                 {
                     key: 'total_price',
                     label: 'Стоимость',
+                    align: 'right',
                     cellFormatter: 'moneyCellFormatter',
                 },
                 // { key: 'main_image', label: '' },
@@ -64,3 +72,9 @@ export default {
     },
 }
 </script>
+
+<style lang="sass">
+.product
+    &__thumb
+        border-radius: 6px
+</style>

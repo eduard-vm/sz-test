@@ -8,7 +8,7 @@
         td(v-for="(field, colIndex) of fields" :key="colIndex" :align="getCellAlign(field)")
             .sz-table__cell(
                 :class="field.cellClass || {}"
-                v-html="renderTemplate(field.cellTemplateRenderer, { value: data[field.key] })"
+                v-html="renderTemplate(field.cellTemplateRenderer, { value: data[field.key], row: data, field })"
                 v-if="field.cellTemplateRenderer"
             )
             .sz-table__cell(v-else :class="field.cellClass || {}")

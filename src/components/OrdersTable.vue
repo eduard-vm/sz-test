@@ -26,7 +26,7 @@
                     | + {{ formatDeclOfProductsCount(data.items.length) }}
 
             template(#nested-for-items="{row}")
-                order-products-table(:data="row.items")
+                order-products-table(:data="row.items" :header-spacer="false")
         .orders-table__pagination
             sz-table-pagination(
                 :count="pagination.count"

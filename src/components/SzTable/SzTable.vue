@@ -20,7 +20,7 @@
                     :key="key" :align="getCellAlign(field)")
                     .sz-table__cell.sz-table__cell--header
                         .label {{ field.label }}
-            tr
+            tr(v-if="headerSpacer")
                 th(:colspan="colsTotal")
         transition-group(tag="tbody" appear name="list")
             template(v-for="(row, rowIndex) of rows")
@@ -70,6 +70,7 @@ export default {
     },
 
     props: {
+        headerSpacer: Boolean, // Пусая строка для визуального разделения заголовка и тела таблицы
         checkbox: Boolean,
         fields: Array,
         rows: Array,
